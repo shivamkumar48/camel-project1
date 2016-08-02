@@ -1,0 +1,81 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://camel.apache.org/schema/spring
+http://camel.apache.org/schema/spring/camel-spring.xsd
+http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- <bean id="jms" class="org.apache.camel.component.jms.JmsComponent">
+             <property name="connectionFactory" >
+                 <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+                         <property name="brokerURL" value="vm://localhost:61616"/>
+                 </bean>
+             </property>
+ </bean>-->
+
+    <!--<bean id="fileCopy" class="FileCopy"/>-->
+    <!--<context:component-scan base-package="Routes"/>-->
+   <!-- <bean id="orderToCSV" class="com.rmg.practice.OrderToCsvProcessor"/>-->
+    <bean id="htmlbean" class="com.rmg.practice.HtmlBean"/>
+    <camelContext xmlns="http://camel.apache.org/schema/spring">
+
+
+        <dataFormats>
+            <jaxb id="jaxb" contextPath="com.rmg.practice.Purchase"/>
+        </dataFormats>
+        <route>
+            <from uri="direct:order"/>
+            <marshal ref="jaxb"/>
+            <to uri="file:src/test/outbox"/>
+        </route>
+
+         <!--<endpoint id="sourceFile" uri="file:src/test/java/inbox?noop=true"/>-->
+
+       <!-- Using TRANSFORM BEAN IN SPRING-->
+      <!--  <route>-->
+   <!-- <from uri = "file:src/test/inbox/htmlfile?noop=true"/>
+            <transform>
+                <method bean="htmlbean" method="toHTML"/>
+            </transform>
+     <to uri="file:src/test/outbox"/>-->
+
+            <!-- USING TRANSFORM SCRIPT IN SPRING-->
+           <!-- <from uri = "file:src/test/inbox/htmlfile?noop=true"/>
+            <transform>
+                <simple> Hello ${body} how are you</simple>
+            </transform>
+            <to uri="file:src/test/outbox"/>-->
+
+        <!--</route>-->
+
+
+         <!--<route>
+             <from uri="file:src/test/inbox?noop=true"/>
+             <process ref="orderToCSV"/>
+             <to uri="file:src/test/outbox/"/>
+
+         </route>-->
+        <!--<contextScan/>-->
+        <!-- <packageScan>
+             <package>Camel-Spring.src.main.java</package>
+         </packageScan>-->
+
+
+
+        <!-- <routeBuilder ref="fileCopy"/>-->
+        <!-- <route>
+             <from uri="file:src/test/inbox?noop=true"/>
+             <to uri="file:src/test/outbox"/>
+         </route>-->
+
+    </camelContext>
+
+
+</beans>
